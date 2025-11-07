@@ -1,66 +1,86 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useEffect, useState } from "react";
+
+// 通知登録を行う関数
+async function subscribePushNotifications() {
+  // サービスワーカーの登録
+  await navigator.serviceWorker.register("/sw.js");
+
+  // プッシュ通知の許可をリクエスト
+  const permission = await Notification.requestPermission();
+
+  // 許可が得られた場合の処理
+  if (permission === "granted") {
+    const registration = await navigator.serviceWorker.ready;
+
+    // プッシュマネージャーにサブスクライブ
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    });
+
+    // サーバーにサブスクリプション情報を送信
+    await fetch("/api/subscribe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(subscription),
+    });
+  } else {
+    // 拒否された場合
+    throw new Error("プッシュ通知の許可が拒否されました。");
+  }
+}
 
 export default function Home() {
+  const [isSupported, setIsSupported] = useState<boolean | null>(null);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
+
+  // プッシュ通知のサポート状況を確認
+  useEffect(() => {
+    if ('Notification' in window && 'serviceWorker' in navigator) {
+      setIsSupported(true);
+
+      // 既にサブスクライブされているか確認
+      navigator.serviceWorker.getRegistration().then(reg => {
+        if (reg) {
+          reg.pushManager.getSubscription().then(subscription => {
+            setIsSubscribed(!!subscription);
+          });
+        }
+      });
+
+    } else {
+      setIsSupported(false);
+      setIsSubscribed(false);
+    }
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <>
+    {/* サポートしている場合 */}
+    {isSupported === true ? (
+      // サブスクライブされていない場合のみボタンを表示
+      !isSubscribed ? (
+        <button onClick={subscribePushNotifications}>
+          通知を登録する
+        </button>
+      ) : (
+        <p>プッシュ通知に登録済みです。</p>
+      )
+    ) : null}
+    
+    {/* サポートしていない場合 */}
+    {isSupported === false ? (
+      <p>このブラウザはプッシュ通知に対応していません。</p>
+    ) : null}
+
+    {/* ロード中 */}
+    {isSupported === null ? (
+      <p>Loading...</p>
+    ) : null}
+    </>
   );
 }
