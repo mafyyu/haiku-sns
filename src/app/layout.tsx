@@ -66,7 +66,7 @@ export default function RootLayout({
               </Link>
             </button>
             <button type="button" className="nav-bar-button post-icon">
-              <Link href="/compose" className='nav-bar-link'>
+              <Link href="/compose/post" className='nav-bar-link'>
                 <Image
                   src="/nav-bar/post.svg"
                   alt="Post"
