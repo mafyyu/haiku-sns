@@ -55,7 +55,7 @@ export default function RootLayout({
           </header>
           {children}
           <div className="nav-bar">
-            <button type="button">
+            <button type="button" className="nav-bar-button">
               <Link href="/" className='nav-bar-link'>
                 <Image
                   src="/nav-bar/home.svg"
@@ -65,7 +65,7 @@ export default function RootLayout({
                 />
               </Link>
             </button>
-            <button type="button" className="post-icon">
+            <button type="button" className="nav-bar-button post-icon">
               <Link href="/compose" className='nav-bar-link'>
                 <Image
                   src="/nav-bar/post.svg"
@@ -75,7 +75,7 @@ export default function RootLayout({
                 />
               </Link>
             </button>
-            <button type="button">
+            <button type="button" className="nav-bar-button">
               <Link href="/profile" className='nav-bar-link'>
                 <Image
                   src="/nav-bar/profile.svg"

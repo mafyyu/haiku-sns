@@ -30,7 +30,7 @@ a.nav-bar-link > img {
     vertical-align: middle;
 }
 
-button {
+button.nav-bar-button {
     width: 50%;
     height: 4rem;
     background: none;
