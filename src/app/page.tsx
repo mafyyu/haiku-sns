@@ -15,14 +15,6 @@ type Post = {
 export default function Home() {
   const { isSignedIn } = useUser();
 
-  // プッシュ通知関連のstate
-  const [isSupported, setIsSupported] = useState<boolean | null>(null);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
-
-  // フォーム関連のstate
-  const [text, setText] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-
   // 投稿関連のstate
   const [posts, setPosts] = useState<Post[]>([]);
   const [cursor, setCursor] = useState<{ cursor_created_at: string; cursor_id: number } | null>(null);
@@ -69,33 +61,12 @@ export default function Home() {
     }
     const { posts: newPosts, nextCursor, hasMore: more } = await res.json();
 
-    setPosts((prev) => [...prev, ...newPosts]);
+    setPosts((prev) =>
+      Array.from(new Map([...prev, ...newPosts].map(p => [p.id, p])).values())
+    );
+
     setCursor(nextCursor ?? null);
     setHasMore(Boolean(more));
-  }
-
-  // 投稿送信
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!text.trim()) return;
-    setSubmitting(true);
-    try {
-      const res = await fetch("/api/posts", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: text }),
-      });
-      if (!res.ok) {
-        const j = await res.json().catch(() => ({}));
-        console.error("POST /api/posts error:", j);
-        return;
-      }
-      const created: Post[] = await res.json();
-      setPosts((prev) => [...created, ...prev]);
-      setText("");
-    } finally {
-      setSubmitting(false);
-    }
   }
 
   // いいね
@@ -121,6 +92,7 @@ export default function Home() {
 
   // 初回ロード
   useEffect(() => {
+    setPosts([]) // ページロード時にリセット
     fetchPost();
     setLoading(false);
   }, []);
@@ -145,44 +117,10 @@ export default function Home() {
     }
   }, [needFetchMore, hasMore, isSignedIn, scrollObserver]);
 
-  // プッシュ通知のサポート状況を確認
-  useEffect(() => {
-    if ("Notification" in window && "serviceWorker" in navigator) {
-      setIsSupported(true);
-
-      navigator.serviceWorker.getRegistration().then((reg) => {
-        if (reg) {
-          reg.pushManager.getSubscription().then((subscription) => {
-            setIsSubscribed(!!subscription);
-          });
-        }
-      });
-    } else {
-      setIsSupported(false);
-      setIsSubscribed(false);
-    }
-  }, []);
 
   return (
     <>
       <h1>投稿テスト</h1>
-      <div>サインインしてるか{isSignedIn}</div>
-
-      {/* 送信フォーム */}
-      <form onSubmit={handleSubmit}>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="いまどうしてる？"
-          rows={3}
-        />
-        <div>
-          <button type="submit" disabled={submitting || !text.trim()}>
-            {submitting ? "送信中..." : "送信"}
-          </button>
-        </div>
-      </form>
-
       {/* 投稿一覧 */}
       <ul>
         {posts.map((p) => (
