@@ -73,7 +73,6 @@ export default function Home() {
     setCursor(nextCursor ?? null);
     setHasMore(Boolean(more));
   }
-  console.log("hairetu",posts)
 
   // 投稿送信
   async function handleSubmit(e: React.FormEvent) {
