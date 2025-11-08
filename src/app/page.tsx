@@ -2,11 +2,12 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
+import HaikuCard from "./_components/haiku_card";
 
 type Post = {
   id: number;
   user_id: string;
-  content: string;
+  content: string[];
   like: number | null;
   created_at: string;
   is_new: boolean
@@ -120,9 +121,14 @@ export default function Home() {
 
   return (
     <>
-      <h1>投稿テスト</h1>
-      {/* 投稿一覧 */}
-      <ul>
+      <div>
+        {posts.map((p)=>(
+          <div key={p.id}>
+            <HaikuCard haiku={p.content}isGold={p.is_new}/>
+          </div>
+        ))}
+      </div>
+      {/* <ul>
         {posts.map((p) => (
           <li key={p.id}>
             <div>{p.id}</div>
@@ -138,7 +144,7 @@ export default function Home() {
             <hr />
           </li>
         ))}
-      </ul>
+      </ul> */}
 
       <div ref={bottomBoundaryRef} style={{ minHeight: "200px" }}></div>
       <div>{isSignedIn ? "" : "ここから先はアカウント登録が必要です"}</div>
