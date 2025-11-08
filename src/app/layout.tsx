@@ -1,4 +1,9 @@
 import { type Metadata } from 'next'
+import Link from 'next/link'
+import Image from 'next/image'
+
+import HaikuCard from './_components/haiku_card'
+
 import {
   ClerkProvider,
   SignInButton,
@@ -8,6 +13,8 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
+
+import './globals.css'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -47,6 +54,38 @@ export default function RootLayout({
             </SignedIn>
           </header>
           {children}
+          <div className="nav-bar">
+            <button type="button">
+              <Link href="/" className='nav-bar-link'>
+                <Image
+                  src="/nav-bar/home.svg"
+                  alt="Home"
+                  width={32}
+                  height={32}
+                />
+              </Link>
+            </button>
+            <button type="button" className="post-icon">
+              <Link href="/compose" className='nav-bar-link'>
+                <Image
+                  src="/nav-bar/post.svg"
+                  alt="Post"
+                  width={32}
+                  height={32}
+                />
+              </Link>
+            </button>
+            <button type="button">
+              <Link href="/profile" className='nav-bar-link'>
+                <Image
+                  src="/nav-bar/profile.svg"
+                  alt="Profile"
+                  width={32}
+                  height={32}
+                />
+              </Link>
+            </button>
+          </div>
         </body>
       </html>
     </ClerkProvider>
