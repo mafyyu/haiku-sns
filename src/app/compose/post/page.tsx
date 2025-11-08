@@ -104,6 +104,7 @@ export default function Post() {
 
         <button
           onClick={handleSubmit}
+          disabled={!text1.trim() || !text2.trim() || !text3.trim()}
           style={{
             display: "inline-flex",
             alignItems: "center",
@@ -118,6 +119,7 @@ export default function Post() {
             fontWeight: 500,
             cursor: "pointer",
             transition: "background-color 0.2s",
+            opacity: !text1.trim() || !text2.trim() || !text3.trim() ? 0.5 : 1
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.backgroundColor = "#d5d5d5";
