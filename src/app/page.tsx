@@ -9,6 +9,7 @@ type Post = {
   content: string;
   like: number | null;
   created_at: string;
+  is_new: boolean
 };
 
 export default function Home() {
@@ -190,6 +191,7 @@ export default function Home() {
             <div>{p.content}</div>
             <div>{p.like}</div>
             <div>{p.created_at}</div>
+            <div>{String(p.is_new)}</div>
             <div>
               <button onClick={() => handleLike(p.id)} disabled={likingId === p.id}>
                 いいね ({p.like ?? 0})

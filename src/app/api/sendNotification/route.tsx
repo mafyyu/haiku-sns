@@ -53,10 +53,16 @@ export async function POST(request: Request) {
             });
 
             await Promise.all(sendNotifications);
+
+            // 通知時間をdbに追加
+            const { error } = await supabase
+                .from("cron_log")
+                .insert({})
+            if(error) throw new Error(error.message)
         }
 
     } catch (error) {
-        
+
     }
 
     return NextResponse.json(
