@@ -25,7 +25,7 @@ export async function POST(
             .eq("user_id", userId)
         if(likeFetchError) throw new Error(likeFetchError.message)
 
-        //　既存のいいね数を取得
+        // 既存のいいね数を取得
     const { data: postData, error: fetchError } = await supabase
         .from("posts")
         .select("like")
