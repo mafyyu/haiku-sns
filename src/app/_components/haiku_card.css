@@ -1,0 +1,21 @@
+div.haiku-card {
+    display: inline-flex;
+    aspect-ratio: 2/3;
+
+    padding: 1.5rem;
+
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.5rem;
+
+    border: 8px solid #566B3A;
+    background: url("/22232950_s.jpg") lightgray 50% / cover no-repeat;
+}
+
+p.haiku-sentence {
+    font-size: 1.5rem;
+    font-weight: 600;
+    white-space: pre-wrap;
+    margin: 0 0.5rem;
+}
