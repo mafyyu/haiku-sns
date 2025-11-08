@@ -13,7 +13,7 @@ export default function Post() {
   // 投稿送信
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const postText = `${text1} ${text2} ${text3}`;
+    const postText = [text1, text2, text3];
     try {
       const res = await fetch("/api/posts", {
         method: "POST",
