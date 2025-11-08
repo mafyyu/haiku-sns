@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/libs/supabaseClient";
-// import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 export async function POST(request: NextRequest) {
     try{
-        const userId = "test_user"
-        // const user = await currentUser();
-        // if (!user) {
-        //     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-        //   }
+        const user = await currentUser();
+        if (!user) {
+            return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+          }
         const { content } = await request.json();
+        
         if(content.trim()=="" || !content){
             return NextResponse.json(
                 { error: "Content cannnot be empty" },
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
         }
         const { data, error } = await supabase
             .from('posts')
-            .insert([{ user_id: userId, content }])
+            .insert([{ user_id: user.id, content }])
             .select()
 
         if (error) {

@@ -1,6 +1,6 @@
 import { supabase } from "@/libs/supabaseClient";
 import { NextRequest, NextResponse } from "next/server";
-// import { currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 // clerk導入後にuser_idをuser.idに変更してsupabaseのuser_idをuuidに変更
 
@@ -9,20 +9,19 @@ export async function POST(
     _request: NextRequest,
     context: { params: Promise<{ id: string }> }){
     try{
-        const userId = "test_user"
         const { id } = await context.params;
         const postId = Number(id)
 
-        // const user = await currentUser();
-        // if(!user){
-        //     return NextResponse.json({ error: "Unauthorized"}, { status: 401 })
-        // }
+        const user = await currentUser();
+        if(!user){
+            return NextResponse.json({ error: "Unauthorized"}, { status: 401 })
+        }
 
         const { data: existingLike, error: likeFetchError } = await supabase
             .from("like")
             .select("*")
             .eq("post_id", postId)
-            .eq("user_id", userId)
+            .eq("user_id", user.id)
         if(likeFetchError) throw new Error(likeFetchError.message)
 
         // 既存のいいね数を取得
@@ -40,7 +39,7 @@ export async function POST(
             const { error: deleteError } = await supabase
                 .from('like')
                 .delete()
-                .eq("user_id", userId)
+                .eq("user_id", user.id)
                 .eq("post_id", postId)
             if(deleteError) throw new Error(deleteError.message);
 
@@ -62,7 +61,7 @@ export async function POST(
             .from("like")
             .insert([{
                 post_id: postId,
-                user_id: userId
+                user_id: user.id
             }])
         if(insertError) throw new Error(insertError.message)
 
