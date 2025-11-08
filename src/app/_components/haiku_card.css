@@ -1,0 +1,30 @@
+:root {
+    --haiku-card-border-normal: #566B3A;
+    --haiku-card-border-gold: linear-gradient(135deg, #D0A900 0%, #E7C126 14.9%, #FFD84B 34.62%, #FFFAB4 50%, #FFD84B 65.38%, #E7C126 84.62%, #D0A900 100%);
+}
+
+div.haiku-card {
+    display: inline-flex;
+    aspect-ratio: 2/3;
+
+    padding: 1.5rem;
+
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 1.5rem;
+
+    border: 0.5rem solid var(--haiku-card-border-normal);
+    background: url("/haiku_card_bg.jpg") #F5EEE6 50% / cover no-repeat;
+}
+
+div.haiku-card[data-gold="true"] {
+    border-image: var(--haiku-card-border-gold) 1;
+}
+
+p.haiku-sentence {
+    font-size: 1.5rem;
+    font-weight: 600;
+    white-space: pre-wrap;
+    margin: 0 0.5rem;
+}
