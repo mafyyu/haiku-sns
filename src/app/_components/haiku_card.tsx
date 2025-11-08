@@ -2,6 +2,7 @@ import "./haiku_card.css";
 
 interface Props {
     haiku: Array<string>;
+    isGold?: boolean;
 }
 
 function styleHaikuLine(line: string, index: number): string {
@@ -11,9 +12,9 @@ function styleHaikuLine(line: string, index: number): string {
     return lineBreaks + line.split('').join('\n');
 }
 
-export default function HaikuCard({ haiku }: Props) {
+export default function HaikuCard({ haiku, isGold }: Props) {
     return (
-        <div className="haiku-card">
+        <div className="haiku-card" data-gold={isGold}>
             {haiku.map((line, index) => (
                 <p className="haiku-sentence" key={index}>{
                     styleHaikuLine(line, index)
