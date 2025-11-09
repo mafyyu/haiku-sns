@@ -6,6 +6,7 @@
 div.haiku-card {
     display: inline-flex;
     aspect-ratio: 2/3;
+    width: 25ch;
 
     padding: 1.5rem;
 
@@ -23,8 +24,10 @@ div.haiku-card[data-gold="true"] {
 }
 
 p.haiku-sentence {
+    text-align: center;
     font-size: 1.5rem;
     font-weight: 600;
     white-space: pre-wrap;
-    margin: 0 0.5rem;
+
+    writing-mode: vertical-lr;
 }

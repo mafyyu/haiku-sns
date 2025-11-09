@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
         const { content } = await request.json();
 
         // 不正な値を排除
-        if(content.trim()=="" || !content){
+        if(content.length==0 || !content){
             return NextResponse.json(
                 { error: "Content cannnot be empty" },
                 { status: 400 }
