@@ -48,7 +48,7 @@ export default function Post() {
     >
       {/* 俳句カード */}
       <HaikuCard
-        isGold={true}
+        isGold={false}// 時間によって変更
         haiku={[
           text1 || "泣かぬなら",
           text2 || "泣かせて見せよう",
@@ -87,18 +87,20 @@ export default function Post() {
             setText2(lines[1] || "");
             setText3(lines[2] || "");
           }}
+          
           placeholder={`泣かぬなら\n泣かせて見せよう\nとほほぎす`}
           rows={3}
           style={{
             width: "100%",
             padding: "0.75rem",
             backgroundColor: "#f5f5f5",
-            border: "1px solid #e0e0e0",
+            border: "1px solid #808080",
             borderRadius: "0.5rem",
             fontSize: "1rem",
             fontFamily: "inherit",
-            resize: "vertical",
+            resize: "none",
             lineHeight: "1.5",
+            background: "#D9D9D90"
           }}
         />
 
@@ -106,11 +108,13 @@ export default function Post() {
           onClick={handleSubmit}
           disabled={!text1.trim() || !text2.trim() || !text3.trim()}
           style={{
+            width: "50%",
             display: "inline-flex",
             alignItems: "center",
             justifyContent: "center",
             gap: "0.5rem",
             padding: "0.75rem 1.5rem",
+            margin: "auto",
             borderRadius: "0.5rem",
             backgroundColor: "#e5e5e5",
             border: "none",
@@ -128,7 +132,7 @@ export default function Post() {
             e.currentTarget.style.backgroundColor = "#e5e5e5";
           }}
         >
-          詠む
+            <img src="/pencil.png" alt="pencil icon" style={{width:"20px", height: "20px"}} />詠む
         </button>
       </div>
     </div>
