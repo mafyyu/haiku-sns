@@ -28,5 +28,6 @@ p.haiku-sentence {
     font-size: 1.5rem;
     font-weight: 600;
     white-space: pre-wrap;
-    margin: 0 0.5rem;
+
+    writing-mode: vertical-lr;
 }
