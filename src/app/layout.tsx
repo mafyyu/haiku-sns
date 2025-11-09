@@ -1,16 +1,11 @@
-import { type Metadata } from 'next'
-import Link from 'next/link'
-import Image from 'next/image'
 
-import HaikuCard from './_components/haiku_card'
+import { type Metadata } from 'next'
+import { Navigation } from './_components/navigation'
+
+
 
 import {
   ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
 } from '@clerk/nextjs'
 import { Geist, Geist_Mono } from 'next/font/google'
 
@@ -38,54 +33,10 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="ja">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <header className="flex justify-end items-center p-4 gap-4 h-16">
-            <SignedOut>
-              <SignInButton />
-              <SignUpButton>
-                <button className="bg-[#6c47ff] text-ceramic-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                  Sign Up
-                </button>
-              </SignUpButton>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
           {children}
-          <div className="nav-bar">
-            <button type="button" className="nav-bar-button">
-              <Link href="/" className='nav-bar-link'>
-                <Image
-                  src="/nav-bar/home.svg"
-                  alt="Home"
-                  width={32}
-                  height={32}
-                />
-              </Link>
-            </button>
-            <button type="button" className="nav-bar-button post-icon">
-              <Link href="/compose/post" className='nav-bar-link'>
-                <Image
-                  src="/nav-bar/post.svg"
-                  alt="Post"
-                  width={32}
-                  height={32}
-                />
-              </Link>
-            </button>
-            <button type="button" className="nav-bar-button">
-              <Link href="/profile" className='nav-bar-link'>
-                <Image
-                  src="/nav-bar/profile.svg"
-                  alt="Profile"
-                  width={32}
-                  height={32}
-                />
-              </Link>
-            </button>
-          </div>
+          <Navigation></Navigation>
         </body>
       </html>
     </ClerkProvider>
