@@ -22,7 +22,7 @@ export function Navigation(){
           </Link>
         </button>
         <button type="button" className="nav-bar-button post-icon">
-          <Link href={isSignedIn ? "compose/post": "/sign-in" } className='nav-bar-link'>
+          <Link href={isSignedIn ? "/compose/post": "/sign-in" } className='nav-bar-link'>
             <Image
               src="/nav-bar/post.svg"
               alt="Post"
