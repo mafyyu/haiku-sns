@@ -139,7 +139,7 @@ export default function Home() {
           <div key={p.id}>
             <PostCard
               icon_id={1}
-              name={String(user?.firstName)}
+              name= {"名無しの俳人"}
               haiku={p.content}
               like={Number(p.like)}
               isGold={p.is_new}
