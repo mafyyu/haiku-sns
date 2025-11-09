@@ -6,10 +6,10 @@ interface Props {
 }
 
 function styleHaikuLine(line: string, index: number): string {
-    // 文番号に応じて改行を追加
-    const lineBreaks = "\n".repeat(index);
+    // 文番号に応じて空白を追加
+    const lineBreaks = "　".repeat(index);
 
-    return lineBreaks + line.split('').join('\n');
+    return lineBreaks + line;
 }
 
 export default function HaikuCard({ haiku, isGold }: Props) {
