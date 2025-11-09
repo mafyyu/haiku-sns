@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
-import HaikuCard from "./_components/haiku_card";
 import PostCard from "./_components/post_card";
 
 type Post = {
@@ -22,12 +21,15 @@ export default function Home() {
   const [cursor, setCursor] = useState<{ cursor_created_at: string; cursor_id: number } | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [likingId, setLikingId] = useState<number | null>(null);
+  const [likedPost, setLiked] = useState<number[]>([]);
 
   // 無限スクロール関連のstate
   const [needFetchMore, setNeedFetchMore] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
   const bottomBoundaryRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+
+
 
   // 無限スクロールの監視設定
   const scrollObserver = useCallback((node: HTMLElement | null) => {
@@ -74,7 +76,11 @@ export default function Home() {
   // いいね
   async function handleLike(id: number) {
     if (likingId !== null) return;
-    setLikingId(id);
+    setLikingId(id)
+    setLoading(true)
+    setLiked((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
     try {
       const res = await fetch(`/api/posts/${id}/like`, { method: "POST" });
       if (!res.ok) {
@@ -83,7 +89,6 @@ export default function Home() {
         return;
       }
       const data = await res.json();
-
       setPosts((prev) =>
         prev.map((p) => (p.id === id ? { ...p, like: data.newLikeCount ?? 0 } : p))
       );
@@ -122,32 +127,21 @@ export default function Home() {
 
   return (
     <>
-      <div>
-        {posts.map((p)=>(
+      <div >
+        {posts.map((p) => (
           <div key={p.id}>
-            <PostCard icon_id={1} name={String(user?.firstName)} haiku={p.content} like={Number(p.like)} isGold={p.is_new}/>
-            {/* <HaikuCard haiku={p.content}isGold={p.is_new}/> */}
+            <PostCard
+              icon_id={1}
+              name={String(user?.firstName)}
+              haiku={p.content}
+              like={Number(p.like)}
+              isGold={p.is_new}
+              handleLike={() => handleLike(p.id)}
+              style={likedPost.includes(p.id) ? { fill: "#FF3D3D" } : {}}
+            />
           </div>
         ))}
       </div>
-      {/* <ul>
-        {posts.map((p) => (
-          <li key={p.id}>
-            <div>{p.id}</div>
-            <div>{p.content}</div>
-            <div>{p.like}</div>
-            <div>{p.created_at}</div>
-            <div>{String(p.is_new)}</div>
-            <div>
-              <button onClick={() => handleLike(p.id)} disabled={likingId === p.id}>
-                いいね ({p.like ?? 0})
-              </button>
-            </div>
-            <hr />
-          </li>
-        ))}
-      </ul> */}
-
       <div ref={bottomBoundaryRef} style={{ minHeight: "200px" }}></div>
       <div>{isSignedIn ? "" : "ここから先はアカウント登録が必要です"}</div>
       <div>{loading ? "読み込み中" : "読み込み完了！"}</div>
