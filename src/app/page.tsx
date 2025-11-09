@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
 import PostCard from "./_components/post_card";
+import { useRouter } from "next/navigation";
 
 type Post = {
   id: number;
@@ -15,6 +16,7 @@ type Post = {
 
 export default function Home() {
     const { isSignedIn, user } = useUser();
+    const router = useRouter();
 
   // 投稿関連のstate
   const [posts, setPosts] = useState<Post[]>([]);
@@ -22,6 +24,7 @@ export default function Home() {
   const [hasMore, setHasMore] = useState(true);
   const [likingId, setLikingId] = useState<number | null>(null);
   const [likedPost, setLiked] = useState<number[]>([]);
+  
 
   // 無限スクロール関連のstate
   const [needFetchMore, setNeedFetchMore] = useState(false);
@@ -75,25 +78,29 @@ export default function Home() {
 
   // いいね
   async function handleLike(id: number) {
-    if (likingId !== null) return;
-    setLikingId(id)
-    setLoading(true)
-    setLiked((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
-    try {
-      const res = await fetch(`/api/posts/${id}/like`, { method: "POST" });
-      if (!res.ok) {
-        const j = await res.json().catch(() => ({}));
-        console.error("POST /api/posts/[id]/like error:", j);
-        return;
-      }
-      const data = await res.json();
-      setPosts((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, like: data.newLikeCount ?? 0 } : p))
+    if(!isSignedIn || null){
+      router.push("/sign-in")
+    }else{
+      if (likingId !== null) return;
+      setLikingId(id)
+      setLoading(true)
+      setLiked((prev) =>
+        prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
       );
-    } finally {
-      setLikingId(null);
+      try {
+        const res = await fetch(`/api/posts/${id}/like`, { method: "POST" });
+        if (!res.ok) {
+          const j = await res.json().catch(() => ({}));
+          console.error("POST /api/posts/[id]/like error:", j);
+          return;
+        }
+        const data = await res.json();
+        setPosts((prev) =>
+          prev.map((p) => (p.id === id ? { ...p, like: data.newLikeCount ?? 0 } : p))
+        );
+      } finally {
+        setLikingId(null);
+      }
     }
   }
 
