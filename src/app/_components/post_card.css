@@ -1,0 +1,47 @@
+:root {
+    --text-color-gray : #808080;
+    --max-width-post-card: 600px;
+}
+
+div.post-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+
+    width: 100%;
+    max-width: var(--max-width-post-card);
+}
+
+/* ユーザ情報 */
+div.user-info {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    margin-right: auto; /* 左寄せ */
+
+    color:var(--text-color-gray);
+    font-weight: 400;
+    letter-spacing: calc(1rem / 6);
+}
+
+/* いいね欄 */
+div.like-counter {
+    display: flex;
+    gap: 1rem;
+
+    margin-left: auto; /* 右寄せ */
+}
+
+svg.like-icon {
+    stroke: var(--text-color-gray);
+    stroke-width: 2;
+}
+
+div.like-counter span {
+    color: var(--text-color-gray);
+    font-size: 1.25rem;
+}

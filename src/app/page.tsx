@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useUser } from "@clerk/nextjs";
 import HaikuCard from "./_components/haiku_card";
+import PostCard from "./_components/post_card";
 
 type Post = {
   id: number;
@@ -14,7 +15,7 @@ type Post = {
 };
 
 export default function Home() {
-  const { isSignedIn } = useUser();
+    const { isSignedIn, user } = useUser();
 
   // 投稿関連のstate
   const [posts, setPosts] = useState<Post[]>([]);
@@ -124,7 +125,8 @@ export default function Home() {
       <div>
         {posts.map((p)=>(
           <div key={p.id}>
-            <HaikuCard haiku={p.content}isGold={p.is_new}/>
+            <PostCard icon_id={1} name={String(user?.firstName)} haiku={p.content} like={Number(p.like)} isGold={p.is_new}/>
+            {/* <HaikuCard haiku={p.content}isGold={p.is_new}/> */}
           </div>
         ))}
       </div>
