@@ -11,13 +11,14 @@ interface PostCardProps {
     haiku: Array<string>;
     like: number;
     isGold?: boolean;
+    handleLike: ()=>void;
+    style: React.CSSProperties;
 }
 
 export default function PostCard(
-    { icon_id, name, haiku, like=0, isGold }: PostCardProps
+    { icon_id, name, haiku, like=0, isGold, handleLike, style }: PostCardProps
 ) {
     return (
-        <>
         <div className="post-card">
             <div className="user-info">
                 <Image src={`/user_icons/${icon_id}.png`} alt={name} width={48} height={48} />
@@ -25,10 +26,9 @@ export default function PostCard(
             </div>
             <HaikuCard haiku={haiku} isGold={isGold} />
             <div className="like-counter">
-                <LikeIcon width={30} height={28} className="like-icon" />
+                <LikeIcon width={30} height={28} className="like-icon" onClick={handleLike} style={style}/>
                 <span>{like}</span>
             </div>
         </div>
-        </>
     );
 }
